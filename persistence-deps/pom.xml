@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- 
+	<groupId>org.sonatype.mavenbook.ch08</groupId>
+	<artifactId>persistence-deps</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	 -->
+	<parent>
+	    <groupId>org.sonatype.mavenbook.ch08</groupId>
+	    <artifactId>simple-parent</artifactId>
+	    <version>1-SNAPSHOT</version>
+	</parent>
+	<artifactId>persistence-deps</artifactId>
+	
+	<packaging>pom</packaging>
+	<name>persistence-deps</name>
+	<description>persistence提供便利的项目</description>
+	<properties>
+	<!-- 
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<h2.version>1.3.168</h2.version>
+		<junit.version>4.8.2</junit.version>
+ 	-->
+ 		<h2.version>1.3.168</h2.version>
+ 		<spring.version>3.2.3.RELEASE</spring.version>
+	</properties>
+	
+	<modules>
+		<!-- <module>com-model</module> -->
+		<module>mybatis</module>
+	</modules>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>${h2.version}</version>
+			<!-- <scope>test</scope> -->
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency> -->
+		
+		
+		<!-- logging begin -->
+		<!-- slf4j -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.11</version>
+		</dependency>
+
+		<!-- slf4j-log4j绑定 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.11</version>
+		</dependency>
+
+		<!-- slf4j没有log4j的情形 
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.5.11</version>
+		</dependency>
+		--> 
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+		</dependency>
+		<!-- logging end -->
+		
+		
+	</dependencies>
+
+</project>

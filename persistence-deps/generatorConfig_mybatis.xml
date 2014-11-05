@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<!-- <context id="context1">
+		<jdbcConnection driverClass="org.h2.Driver"
+			connectionURL="jdbc:h2:E:/H2Test/data/weather" userId="sa" password="" />
+		<javaModelGenerator targetPackage="org.persistence.model"
+			targetProject="com-model" />
+		<sqlMapGenerator targetPackage="org.persistence.mybatis.mapper"
+			targetProject="mybatis" />
+		<javaClientGenerator targetPackage="org.persistence.mybatis.client"
+			targetProject="mybatis" type="XMLMAPPER" />
+
+		<table schema="" tableName="WIND"></table>
+		<table tableName="LOCATION"></table>
+		<table tableName="CONDITION"></table>
+		<table tableName="ATMOSPHERE"></table>
+		<table tableName="WEATHER "></table>
+
+	</context> -->
+
+
+	<!-- classPathEntry:数据库的JDBC驱动的jar包地址,驱动包的绝对路径-->  
+	<classPathEntry location = "D:\Devtools\h2-2014-04-05\h2\bin\h2-1.3.176.jar" />
+	<context id="h2WeatherTables" targetRuntime="MyBatis3">
+		<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+		<commentGenerator>  
+            <property name="suppressDate" value="true" />
+            <property name="suppressAllComments" value="true" />  
+        </commentGenerator>  
+		
+		<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		<jdbcConnection driverClass="org.h2.Driver"
+			connectionURL="jdbc:h2:tcp://localhost/E:/H2Test/data/weather" userId="sa" password="" />
+			
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 和 
+			NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name = "forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		
+		<!-- targetProject:自动生成代码的位置 -->
+		<javaModelGenerator targetPackage="org.sonatype.mavenbook.weather.model" targetProject="com-model">
+			<!-- enableSubPackages:是否让schema作为包的后缀 -->
+			<property name="enableSubPackages" value="true" />  
+			<!-- 从数据库返回的值清理前后的空格 -->
+            <!-- <property name="trimStrings" value="true" />  --> 
+		</javaModelGenerator>
+		<sqlMapGenerator targetPackage="org.persist.mybatis.mapper" targetProject="mybatis" />
+		<javaClientGenerator targetPackage="org.persist.mybatis.dao" targetProject="mybatis" type="XMLMAPPER" />
+
+		<!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
+		<!-- <table schema="untodo" tableName="mocha_t_app"domainObjectName="MochaTodoApp"></table> -->
+		<table tableName="LOCATION"></table>
+		<table tableName="WEATHER"></table>
+		<table tableName="ATMOSPHERE"></table>
+		<table tableName="CONDITION"></table>
+		<table tableName="WIND"></table>
+	</context>
+</generatorConfiguration>

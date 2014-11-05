@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.persist.mybatis.dao.AtmosphereMapper" >
+  <resultMap id="BaseResultMap" type="org.sonatype.mavenbook.weather.model.Atmosphere" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="HUMIDITY" property="humidity" jdbcType="VARCHAR" />
+    <result column="PRESSURE" property="pressure" jdbcType="VARCHAR" />
+    <result column="RISING" property="rising" jdbcType="VARCHAR" />
+    <result column="VISIBILITY" property="visibility" jdbcType="VARCHAR" />
+    <result column="WEATHER_ID" property="weatherId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, HUMIDITY, PRESSURE, RISING, VISIBILITY, WEATHER_ID
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.sonatype.mavenbook.weather.model.AtmosphereExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ATMOSPHERE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ATMOSPHERE
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+   <!-- selectByWeatherId -->
+  <select id="selectByWeatherId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ATMOSPHERE
+    where WEATHER_ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ATMOSPHERE
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.sonatype.mavenbook.weather.model.AtmosphereExample" >
+    delete from ATMOSPHERE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.sonatype.mavenbook.weather.model.Atmosphere" >
+    insert into ATMOSPHERE (ID, HUMIDITY, PRESSURE, 
+      RISING, VISIBILITY, WEATHER_ID
+      )
+    values (#{id,jdbcType=INTEGER}, #{humidity,jdbcType=VARCHAR}, #{pressure,jdbcType=VARCHAR}, 
+      #{rising,jdbcType=VARCHAR}, #{visibility,jdbcType=VARCHAR}, #{weatherId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.sonatype.mavenbook.weather.model.Atmosphere" >
+    insert into ATMOSPHERE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="humidity != null" >
+        HUMIDITY,
+      </if>
+      <if test="pressure != null" >
+        PRESSURE,
+      </if>
+      <if test="rising != null" >
+        RISING,
+      </if>
+      <if test="visibility != null" >
+        VISIBILITY,
+      </if>
+      <if test="weatherId != null" >
+        WEATHER_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="humidity != null" >
+        #{humidity,jdbcType=VARCHAR},
+      </if>
+      <if test="pressure != null" >
+        #{pressure,jdbcType=VARCHAR},
+      </if>
+      <if test="rising != null" >
+        #{rising,jdbcType=VARCHAR},
+      </if>
+      <if test="visibility != null" >
+        #{visibility,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherId != null" >
+        #{weatherId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.sonatype.mavenbook.weather.model.AtmosphereExample" resultType="java.lang.Integer" >
+    select count(*) from ATMOSPHERE
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ATMOSPHERE
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.humidity != null" >
+        HUMIDITY = #{record.humidity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pressure != null" >
+        PRESSURE = #{record.pressure,jdbcType=VARCHAR},
+      </if>
+      <if test="record.rising != null" >
+        RISING = #{record.rising,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visibility != null" >
+        VISIBILITY = #{record.visibility,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weatherId != null" >
+        WEATHER_ID = #{record.weatherId,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ATMOSPHERE
+    set ID = #{record.id,jdbcType=INTEGER},
+      HUMIDITY = #{record.humidity,jdbcType=VARCHAR},
+      PRESSURE = #{record.pressure,jdbcType=VARCHAR},
+      RISING = #{record.rising,jdbcType=VARCHAR},
+      VISIBILITY = #{record.visibility,jdbcType=VARCHAR},
+      WEATHER_ID = #{record.weatherId,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sonatype.mavenbook.weather.model.Atmosphere" >
+    update ATMOSPHERE
+    <set >
+      <if test="humidity != null" >
+        HUMIDITY = #{humidity,jdbcType=VARCHAR},
+      </if>
+      <if test="pressure != null" >
+        PRESSURE = #{pressure,jdbcType=VARCHAR},
+      </if>
+      <if test="rising != null" >
+        RISING = #{rising,jdbcType=VARCHAR},
+      </if>
+      <if test="visibility != null" >
+        VISIBILITY = #{visibility,jdbcType=VARCHAR},
+      </if>
+      <if test="weatherId != null" >
+        WEATHER_ID = #{weatherId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sonatype.mavenbook.weather.model.Atmosphere" >
+    update ATMOSPHERE
+    set HUMIDITY = #{humidity,jdbcType=VARCHAR},
+      PRESSURE = #{pressure,jdbcType=VARCHAR},
+      RISING = #{rising,jdbcType=VARCHAR},
+      VISIBILITY = #{visibility,jdbcType=VARCHAR},
+      WEATHER_ID = #{weatherId,jdbcType=INTEGER}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

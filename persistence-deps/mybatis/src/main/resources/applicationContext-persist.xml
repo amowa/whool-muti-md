@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-lazy-init="true">
+       
+    <!-- Annotation Config 
+    <context:annotation-config/>
+    -->
+    <!--注册数据库的连接信息 
+    <context:property-placeholder location="classpath:config/jdbc.properties"/>   
+    -->
+	<!-- 定义易受环境影响的变量 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<!-- 标准配置 -->
+				<value>classpath*:/application.properties</value>
+				<!-- 本地开发环境配置 -->
+				<value>classpath*:/application.local.properties</value>
+				<!-- 服务器生产环境配置 -->
+				<value>classpath*:/application.server.properties</value>
+			</list>
+		</property>
+	</bean>
+    
+	<bean id="c3p0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driver}" />
+        <property name="jdbcUrl" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <property name="autoCommitOnClose" value="true"/>
+        <property name="checkoutTimeout" value="${cpool.checkoutTimeout}"/>
+        <property name="initialPoolSize" value="${cpool.minPoolSize}"/>
+        <property name="minPoolSize" value="${cpool.minPoolSize}"/>
+        <property name="maxPoolSize" value="${cpool.maxPoolSize}"/>
+        <property name="maxIdleTime" value="${cpool.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${cpool.acquireIncrement}"/>
+        <property name="maxIdleTimeExcessConnections" value="${cpool.maxIdleTimeExcessConnections}"/>
+    </bean>
+    
+	<!-- Mybatis-Spring的SessionFactory -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <!-- <property name="dataSource" ref="dataSource"/>   -->
+        <property name="dataSource" ref="c3p0DataSource" />  
+        <!-- typeAliasesPackage 有默认别名 -->
+        <!-- <property name="configLocation" value="classpath:mybatis-config.xml" /> --> 
+        
+        <property name="mapperLocations" value="classpath:org/persist/mybatis/mapper/*.xml"/>  
+    	<!-- 对应实体类所在的包，简单类名作为别名。多个package之间用逗号或者分号分隔 -->
+    	<property name="typeAliasesPackage" value="org.sonatype.mavenbook.weather.model" /> 
+    	
+    	 <!-- 配置mysql分页拦截器 start -->  
+    	<property name="plugins">
+    		<bean class="org.sonatype.mavenbook.utils.interceptor.PageInterceptor"/> 
+    	</property>
+    </bean>  
+    
+
+	<!-- <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate"> 
+      	<constructor-arg index="0" ref="sqlSessionFactory" /> 
+	</bean> -->
+
+	<!-- <bean id="userDaoImpl3" class="com.xxt.ibatis.dbcp.dao.impl.UserDaoImpl3">
+	   注入SqlSessionTemplate实例
+	   <property name="sqlSessionTemplate" ref="sqlSession" /> 
+	   也可直接注入SqlSessionFactory实例，二者都指定时，SqlSessionFactory失效
+	   <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+	</bean> -->
+
+
+	<context:component-scan base-package="org.persist" />  
+	<!-- 多个的配置法：通过扫描mapper目录所有接口为对应的MapperFactoryBean，可指定mapper继承SqlMapper的接口或注解 。sqlSessionFactory可不指定？-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.persist.mybatis.dao"/>
+        <!-- 
+        <property name="annotationClass"value="com.xxx.mybatis.annotation.MybatisMapper"/>  
+        <property name="markerInterface" value="com.xxx.mapper.SqlMapper"/> 
+        -->
+    </bean>
+    <!--定义单个MapperFactoryBean:创建数据映射器，数据映射器必须为接口-->
+    <!-- <bean id="locationDAO" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+      <property name="mapperInterface" value="org.persist.mybatis.dao.LocationMapper" />
+      <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+    </bean> -->
+      
+      
+    <bean id="locationDAO" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+      <property name="mapperInterface" value="org.sonatype.mavenbook.weather.persist.LocationDAO" />
+      <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+    </bean>
+    <bean id="weatherDAO" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+      <property name="mapperInterface" value="org.sonatype.mavenbook.weather.persist.WeatherDAO" />
+      <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
+    </bean>
+    
+	<!-- 事务管理器 -->  
+    <!-- <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="c3p0DataSource" />  
+    </bean>  --> 
+    <!-- 事务AOP拦截控制配置 
+    <aop:config proxy-target-class="true">  
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.hotent.dao.MyBatisDao.*(..))"/>  
+    </aop:config>  
+  -->  
+    <!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">  
+        <tx:attributes>  
+            <tx:method name="get*" read-only="true"/>  
+            <tx:method name="is*" read-only="true"/>  
+            <tx:method name="find*" read-only="true"/>  
+            <tx:method name="query*" read-only="true"/>  
+            <tx:method name="*"  isolation="DEFAULT"/>  
+        </tx:attributes>  
+    </tx:advice>   -->
+    
+	<!-- 使用annotation 自动注册bean,并保证@Required,@Autowired的属性被注入 
+	<context:component-scan base-package="org.persist.mybatis.dao.**" />
+	-->
+	<!-- <context:component-scan base-package="org.persist" >
+  		<context:include-filter type="regex" expression=".model.*"/>
+  		<context:include-filter type="regex" expression=".mybatis.dao.*"/>
+	</context:component-scan > -->
+	
+    
+ </beans>

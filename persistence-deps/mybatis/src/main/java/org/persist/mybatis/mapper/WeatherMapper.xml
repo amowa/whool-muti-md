@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.persist.mybatis.dao.WeatherMapper" >
+  <resultMap id="BaseResultMap" type="org.sonatype.mavenbook.weather.model.Weather" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="TIMESTAMP" />
+    <result column="LOCATION_ZIP" property="locationZip" jdbcType="VARCHAR" />
+  </resultMap>
+  <!-- 
+  <resultMap id="ConditionResultMap" type="org.sonatype.mavenbook.weather.model.Condition" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="CODE" property="code" jdbcType="VARCHAR" />
+    <result column="DATE" property="date" jdbcType="VARCHAR" />
+    <result column="TEMP" property="temp" jdbcType="VARCHAR" />
+    <result column="TEXT" property="text" jdbcType="VARCHAR" />
+    <result column="WEATHER_ID" property="weatherId" jdbcType="INTEGER" />
+  </resultMap>
+   -->
+  <resultMap id="AssociationSelectMap" type="org.sonatype.mavenbook.weather.model.Weather" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="TIMESTAMP" />
+    <!--  
+	<collection property="attachments" column="LOCATION_ZIP"
+        ofType="org.sonatype.mavenbook.weather.model.Location"
+        select="org.persist.mybatis.dao.LocationMapper.selectByPrimaryKey">
+    </collection> 
+	-->
+     <!-- 一对多的关联 -->
+    <association property="location" column="LOCATION_ZIP" select="org.persist.mybatis.dao.LocationMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  
+  <resultMap id="AssociationAllMap" type="org.sonatype.mavenbook.weather.model.Weather" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="DATE" property="date" jdbcType="TIMESTAMP" />
+    <!--  
+	<collection property="attachments" column="LOCATION_ZIP"
+        ofType="org.sonatype.mavenbook.weather.model.Location"
+        select="org.persist.mybatis.dao.LocationMapper.selectByPrimaryKey">
+    </collection> 
+	-->
+     <!-- 多对一的关联 -->
+    <association property="location" column="LOCATION_ZIP" select="org.persist.mybatis.dao.LocationMapper.selectByPrimaryKey" />
+    <association property="condition" column="ID" select="org.persist.mybatis.dao.ConditionMapper.selectByWeatherId" />
+    <!-- <association property="condition" javaType="org.sonatype.mavenbook.weather.model.Condition" column="ID" select="selectCondition" /> -->
+    <association property="wind" column="ID" select="org.persist.mybatis.dao.WindMapper.selectByWeatherId" />
+    <association property="atmosphere" column="ID" select="org.persist.mybatis.dao.AtmosphereMapper.selectByWeatherId" />
+  </resultMap>
+  
+  <!-- 通过子查询来进行关联 -->
+  <!-- 
+  <select id="selectCondition" parameterType="java.lang.Integer" resultType="ConditionResultMap">  
+  		select * from CONDITION where WEATHER_ID = #{id,jdbcType=INTEGER}
+  </select> 
+  -->  
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, DATE, LOCATION_ZIP
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="org.sonatype.mavenbook.weather.model.WeatherExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from WEATHER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEATHER
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 对象关联 wu-->
+  <select id="selectByPrimaryKey2" resultMap="AssociationSelectMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEATHER
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 获取地区的天气历史记录 -->
+  <select id="recentForLocation" resultMap="AssociationAllMap" parameterType="org.sonatype.mavenbook.weather.model.Location" >
+    select 
+    <include refid="Base_Column_List" />
+    from WEATHER
+    where LOCATION_ZIP = #{zip,jdbcType=VARCHAR}
+  </select>
+    
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from WEATHER
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.sonatype.mavenbook.weather.model.WeatherExample" >
+    delete from WEATHER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.sonatype.mavenbook.weather.model.Weather" >
+    insert into WEATHER (ID, DATE, LOCATION_ZIP
+      )
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, #{locationZip,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <!-- wu add -->
+  <insert id="save" parameterType="org.sonatype.mavenbook.weather.model.Weather" >
+    insert into WEATHER (ID, DATE, LOCATION_ZIP
+      )
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=TIMESTAMP}, #{locationZip,jdbcType=VARCHAR}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="org.sonatype.mavenbook.weather.model.Weather" >
+    insert into WEATHER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="date != null" >
+        DATE,
+      </if>
+      <if test="locationZip != null" >
+        LOCATION_ZIP,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null" >
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationZip != null" >
+        #{locationZip,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.sonatype.mavenbook.weather.model.WeatherExample" resultType="java.lang.Integer" >
+    select count(*) from WEATHER
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update WEATHER
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.date != null" >
+        DATE = #{record.date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.locationZip != null" >
+        LOCATION_ZIP = #{record.locationZip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update WEATHER
+    set ID = #{record.id,jdbcType=INTEGER},
+      DATE = #{record.date,jdbcType=TIMESTAMP},
+      LOCATION_ZIP = #{record.locationZip,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.sonatype.mavenbook.weather.model.Weather" >
+    update WEATHER
+    <set >
+      <if test="date != null" >
+        DATE = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="locationZip != null" >
+        LOCATION_ZIP = #{locationZip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.sonatype.mavenbook.weather.model.Weather" >
+    update WEATHER
+    set DATE = #{date,jdbcType=TIMESTAMP},
+      LOCATION_ZIP = #{locationZip,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
