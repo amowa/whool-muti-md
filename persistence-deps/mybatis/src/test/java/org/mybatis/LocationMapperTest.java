@@ -17,6 +17,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;  
 import org.apache.ibatis.session.SqlSessionFactory;  
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;  
+import org.mybatis.spring.SqlSessionTemplate;
 import org.persist.mybatis.dao.LocationMapper;
 import org.sonatype.mavenbook.weather.model.Location;
 
@@ -42,11 +43,16 @@ public class LocationMapperTest extends TestCase {
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(reader);
 
 		SqlSession session = null;
+		//SqlSessionTemplate实现了SqlSession，线程安全，多个DAO共用,比session更高级的替代。
+		SqlSessionTemplate sqlSessionTemplate = null; 
 		try {
 
 			// 3、获取SqlSession
 			session = sessionFactory.openSession();
-
+			//或者
+			//sqlSessionTemplate = new SqlSessionTemplate(sessionFactory);
+			//sqlSessionTemplate.getMapper(LocationMapper.class);
+			
 			// 4、获取DAO接口对象
 			LocationMapper mapper = session.getMapper(LocationMapper.class);
 

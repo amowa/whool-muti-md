@@ -46,10 +46,10 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <!-- <property name="dataSource" ref="dataSource"/>   -->
         <property name="dataSource" ref="c3p0DataSource" />  
-        <!-- typeAliasesPackage 有默认别名 -->
+        <!-- typeAliasesPackage 有非默认配置时使用 -->
         <!-- <property name="configLocation" value="classpath:mybatis-config.xml" /> --> 
-        
-        <property name="mapperLocations" value="classpath:org/persist/mybatis/mapper/*.xml"/>  
+        <!-- 从类路径下加载..mapper包和子包的xml文件 -->
+        <property name="mapperLocations" value="classpath*:org/persist/mybatis/mapper/**/*.xml"/>  
     	<!-- 对应实体类所在的包，简单类名作为别名。多个package之间用逗号或者分号分隔 -->
     	<property name="typeAliasesPackage" value="org.sonatype.mavenbook.weather.model" /> 
     	
@@ -57,6 +57,7 @@
     	<property name="plugins">
     		<bean class="org.sonatype.mavenbook.utils.interceptor.PageInterceptor"/> 
     	</property>
+    	<!-- 配置mysql分页拦截器 end -->  
     </bean>  
     
 
@@ -73,15 +74,20 @@
 
 
 	<context:component-scan base-package="org.persist" />  
-	<!-- 多个的配置法：通过扫描mapper目录所有接口为对应的MapperFactoryBean，可指定mapper继承SqlMapper的接口或注解 。sqlSessionFactory可不指定？-->
+	<!-- 自动配置：通过扫描mapper目录所有接口,创建对应的MapperFactoryBean代理DAO，可指定mapper继承SqlMapper的接口或注解 。sqlSessionFactory可不指定？-->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="org.persist.mybatis.dao"/>
-        <!-- 
+        <!-- 指定查找注解名，父接口名。默认是包里所有的。
         <property name="annotationClass"value="com.xxx.mybatis.annotation.MybatisMapper"/>  
         <property name="markerInterface" value="com.xxx.mapper.SqlMapper"/> 
         -->
     </bean>
-    <!--定义单个MapperFactoryBean:创建数据映射器，数据映射器必须为接口-->
+    
+    <!-- MapperFactoryBean动态代理生成DAO。
+    	无需继承SqlSessionDaoSupport或SqlSessionTemplaten,无需实现**Mapper接口，无需写任何DAO实现代码
+   	-->
+    
+    <!--单个定义MapperFactoryBean:创建数据映射器，数据映射器必须为接口-->
     <!-- <bean id="locationDAO" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
       <property name="mapperInterface" value="org.persist.mybatis.dao.LocationMapper" />
       <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
@@ -89,6 +95,7 @@
       
       
     <bean id="locationDAO" class="org.mybatis.spring.mapper.MapperFactoryBean"> 
+      <!-- 因为是代理模式，必须是配接口 -->
       <property name="mapperInterface" value="org.sonatype.mavenbook.weather.persist.LocationDAO" />
       <property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
     </bean>

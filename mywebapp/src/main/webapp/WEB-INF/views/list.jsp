@@ -12,6 +12,13 @@
 	</head>
 
 	<body>
+		<form action="${pageContext.request.contextPath}/list">
+		<%-- value="${param.search_LIKE_title} --%>
+			<input id="search_zip" name="search_zip" type="text">
+			<input type="submit" value="search">
+		</form>
+	
+	
 		<div id="container">
 			<table class="simpletablestyle">
 				<thead>
@@ -35,6 +42,7 @@
 				</tbody>
 			</table>
 		</div>
+		${pageContext.request.contextPath}
 		<%-- 
 		<%
 			Page pagerz=(Page) pageContext.getAttribute("pager");
@@ -46,7 +54,7 @@
 			String asdd ="hi!";
 		%> 
 		 zz ${pager.pageNo} oo ${asdd} 
-		  --%>
+		--%>
 		<mx:page pager="${pager}"/> 
 		<%-- <c:if test="${empty pager}">  
 		<mx:page pager="<%=pagerz%>"/> 

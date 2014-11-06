@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.persist.mybatis.dao.LocationMapper;
 import org.sonatype.mavenbook.weather.model.Location;
 import org.sonatype.mavenbook.weather.model.LocationExample;
+import org.sonatype.mavenbook.weather.model.SearchCriteria;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -97,5 +98,17 @@ public class LocationDAOTest extends AbstractJUnit4SpringContextTests {
 			System.out.println(loca.getCity());
 		}
 	}
-
+	
+	
+	@Test
+	public void testSelectMutilAndsz() {
+		SearchCriteria searchCriteria = new SearchCriteria();
+		searchCriteria.or().Like("CITY", "%Bell%");
+		searchCriteria.and().Like("CITY", "%Gard%");
+		//Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		
+		//Specification<Task> spec = buildSpecification(userId, searchParams);
+		List<Location> locsx = locationMapper.selectBySearchCriteria(searchCriteria);
+		assertNotNull("Success", locsx);
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.sonatype.mavenbook.weather.model.Location;
 import org.sonatype.mavenbook.weather.model.LocationExample;
+import org.sonatype.mavenbook.weather.model.SearchCriteria;
 
 public interface LocationMapper {
     int countByExample(LocationExample example);
@@ -32,4 +33,8 @@ public interface LocationMapper {
     int updateByPrimaryKey(Location record);
 
 	List<Location> findAll();
+
+	List<Location> selectBySearchCriteria(SearchCriteria searchCriteria);
+	
+	//List<Location> searchAll();
 }
