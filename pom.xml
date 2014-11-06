@@ -26,7 +26,7 @@
   </properties>
    
   <modules>
-  <!--  
+  <!-- 
     <module>simple-model</module>
     <module>simple-persist</module>  
     <module>mywebapp</module> 
@@ -147,7 +147,7 @@
       <dependency>
         <groupId>javax.persistence</groupId>
         <artifactId>persistence-api</artifactId>
-        <version>1.0</version>
+        <version>1.0.2</version>
       </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
