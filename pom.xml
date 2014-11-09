@@ -29,16 +29,17 @@
   <!-- 
     <module>simple-model</module>
     <module>simple-persist</module>  
-    <module>mywebapp</module> 
+    <module>simple-webapp</module>
     -->
     <module>com-model</module>
+    <module>page-utils</module>
     <module>persistence-deps</module>
     <module>simple-weather</module>
     <module>simple-command</module>
     <module>simple-service</module>
-    <module>simple-webapp</module>
+    <module>mywebapp</module> 
+    
 
-    <module>page-utils</module>
   </modules>
 
   <build>

@@ -20,6 +20,24 @@
   <listener>
 	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  
+  <!-- The Pager-urls Filter -->
+  <filter>
+		<!-- 设计过滤处理类，生成静态页面 -->
+		<filter-name>PagerURLFilter</filter-name>
+		<filter-class>org.sonatype.mavenbook.utils.serlvet.PagerURLFilter</filter-class>
+		
+		<!-- pagerConfigLocation -->
+		<init-param>
+	    	<param-name>pagerConfigLocation</param-name>
+	        <param-value>/WEB-INF/pager-urls.xml</param-value>
+	    </init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>PagerURLFilter</filter-name>
+		<url-pattern>/list/*</url-pattern>
+	</filter-mapping> 
 
   <servlet>
 	<servlet-name>jboss-as-kitchensink</servlet-name>

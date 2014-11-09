@@ -38,11 +38,11 @@
 			<version>3.1</version>
 		</dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>3.3.1</version>
-		</dependency>
+		</dependency> -->
 
 		<dependency>
 			<groupId>dom4j</groupId>
@@ -159,4 +159,13 @@
 			</releases>
 		</repository>
 	</repositories>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.ow2.asm</groupId>
+				<artifactId>asm</artifactId>
+				<version>4.2</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

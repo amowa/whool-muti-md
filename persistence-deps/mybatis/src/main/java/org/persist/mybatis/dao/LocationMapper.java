@@ -21,7 +21,7 @@ public interface LocationMapper {
     List<Location> selectByExample(LocationExample example);
     List<Location> selectByExampleWu(LocationExample example);
 
-    Location selectByPrimaryKey(String zip);
+    //Location selectByPrimaryKey(String zip);
     Location findByZip(String zip);
 
     int updateByExampleSelective(@Param("record") Location record, @Param("example") LocationExample example);

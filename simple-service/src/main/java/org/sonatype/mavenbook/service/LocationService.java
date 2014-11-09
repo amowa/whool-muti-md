@@ -27,7 +27,7 @@ public class LocationService {
 	}
 	 
 	public Location findByZip(String zip) {
-		Location loc = locationDAO.selectByPrimaryKey(zip); //
+		Location loc = locationDAO.findByZip(zip); //
 		
 		/*assertEquals( "New York", loc.getCity() );
 		assertEquals( "US", loc.getRegion() );

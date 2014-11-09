@@ -43,12 +43,12 @@ public class WeatherDAOTest extends AbstractJUnit4SpringContextTests {
 		//对象关联方法
 		/*Weather wea2 = weatherMapper.selectByPrimaryKey2(7);
 		System.out.println(wea2.getLocation().getZip());
-		System.out.println(wea2.getLocation().getCity());*/
+		System.out.println(wea2.getLocation().getCity());
 		
 		Location location = locationMapper.selectByPrimaryKey("60202");
-		List<Weather> ss = weatherMapper.recentForLocation(location);
+		List<Weather> ss = weatherMapper.recentForLocation(location);*/
 		
-		
+		assertEquals( "US", "US" );
 	}
 
 }

@@ -182,13 +182,13 @@
     </if>
   </select>
   
-  
+  <!-- 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from LOCATION
     where ZIP = #{zip,jdbcType=VARCHAR}
-  </select>
+  </select> -->
   <!-- wu add -->
   <select id="findByZip" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 

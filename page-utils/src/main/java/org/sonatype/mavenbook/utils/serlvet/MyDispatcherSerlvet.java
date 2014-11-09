@@ -33,7 +33,7 @@ public class MyDispatcherSerlvet extends DispatcherServlet {
 /*
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		// TODO Pager可在此配置？
+		// TODO Pager可在此配置？ WebApplicationContext?
 		config_m = config;
 		//servletContext:一个web工程只有一个servletContext
 		Object pager_pros = config.getServletContext().getAttribute("PAGER_URLS");
@@ -73,8 +73,9 @@ public class MyDispatcherSerlvet extends DispatcherServlet {
         //defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);
 		
 		super.init(config);
-	}
+	}*/
 	
+	/*
 	@Override
 	public void service(ServletRequest request, ServletResponse response)
 			throws ServletException, IOException {
